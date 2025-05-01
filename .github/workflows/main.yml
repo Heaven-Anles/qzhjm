@@ -16,17 +16,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-      # 新增步骤：将 owner 和 repo 名转换为小写
-    - name: Prepare image tags components
-      id: prep # 给这一步一个 ID，方便引用（虽然我们这里主要用 GITHUB_ENV）
-      run: |
-        echo "IMAGE_OWNER_LC=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-        # 从 'Owner/RepoName' 中提取 'RepoName' 并转为小写
-        raw_repo_name=$(echo '${{ github.repository }}' | sed -e 's/.*\///')
-        echo "IMAGE_REPO_NAME_LC=$(echo '$raw_repo_name' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-        echo "Calculated owner: ${{ env.IMAGE_OWNER_LC }}" # 增加调试信息，方便查看
-        echo "Calculated repo name: ${{ env.IMAGE_REPO_NAME_LC }}" # 增加调试信息，方便查看
-
     - name: Read version from file
       id: version
       run: echo "VERSION=$(cat version.txt | grep version= | cut -d= -f2)" >> $GITHUB_OUTPUT
@@ -47,7 +36,7 @@ jobs:
         context: .
         push: true
         tags: | # 使用多行字符串，让标签更清晰
-          ghcr.io/${{ env.IMAGE_OWNER_LC }}/${{ github.repository }}:latest
-          ghcr.io/${{ env.IMAGE_OWNER_LC }}/${{ github.repository }}:${{ steps.version.outputs.VERSION }}
+          ghcr.io/heaven-anles/qzhjm:latest
+          ghcr.io/heaven-anles/qzhjm:${{ steps.version.outputs.VERSION }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
