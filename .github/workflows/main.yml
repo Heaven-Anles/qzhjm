@@ -47,7 +47,7 @@ jobs:
         context: .
         push: true
         tags: | # 使用多行字符串，让标签更清晰
-          ghcr.io/${{ env.IMAGE_OWNER_LC }}/${{ env.IMAGE_REPO_NAME_LC }}:latest
-          ghcr.io/${{ env.IMAGE_OWNER_LC }}/${{ env.IMAGE_REPO_NAME_LC }}:${{ steps.version.outputs.VERSION }}
+          ghcr.io/${{ env.IMAGE_OWNER_LC }}/${{ github.repository }}:latest
+          ghcr.io/${{ env.IMAGE_OWNER_LC }}/${{ github.repository }}:${{ steps.version.outputs.VERSION }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
