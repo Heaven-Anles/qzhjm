@@ -4,6 +4,8 @@ import logging
 from datetime import datetime, timedelta
 import asyncio 
 GEMINI_API_KEYS = os.environ.get("GEMINI_API_KEYS", "")
+#失效的API密钥
+INVALID_API_KEYS = os.environ.get("INVALID_API_KEYS", "")
 # 基础目录设置
 BASE_DIR = pathlib.Path(__file__).parent.parent
 # 存储目录
@@ -64,8 +66,10 @@ version={
 }
 
 # API调用统计
+# 这个对象保留为空结构以保持向后兼容性
+# 实际统计数据已迁移到 app/utils/stats.py 中的 ApiStatsManager 类
 api_call_stats = {
-    'calls': []  # 存储每次调用的记录，每个记录包含 api_key, model, timestamp, tokens
+    'calls': []  # 兼容旧版代码结构
 }
 
 # 用于保护 api_call_stats 并发访问的锁
@@ -79,4 +83,12 @@ DEFAULT_BLOCKED_MODELS = []
 # 环境变量格式应为逗号分隔的模型名称字符串
 BLOCKED_MODELS = os.environ.get("BLOCKED_MODELS", ",".join(DEFAULT_BLOCKED_MODELS))
 # 将字符串转换为列表
-BLOCKED_MODELS = [model.strip() for model in BLOCKED_MODELS.split(",") if model.strip()]
+BLOCKED_MODELS = { model.strip() for model in BLOCKED_MODELS.split(",") if model.strip() }
+#公益站模式
+PUBLIC_MODE = os.environ.get("PUBLIC_MODE", "false").lower() in ["true", "1", "yes"]
+#前端地址
+DASHBOARD_URL = os.environ.get("DASHBOARD_URL", "")
+# 白名单模式
+WHITELIST_MODELS = { x.strip() for x in os.environ.get("WHITELIST_MODELS", "").split(",") if x.strip() }
+# 白名单User-Agent
+WHITELIST_USER_AGENT = { x.strip().lower() for x in os.environ.get("WHITELIST_USER_AGENT", "").split(",") if x.strip() }

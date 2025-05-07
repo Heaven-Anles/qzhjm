@@ -1,6 +1,8 @@
 # 🚀 HAJIMI Gemini API Proxy
 
-这是一个基于 FastAPI 构建的 Gemini API 代理，旨在提供一个简单、安全且可配置的方式来访问 Google 的 Gemini 模型。适用于在 Hugging Face Spaces 上部署，并支持openai api格式的工具集成。
+- 这是一个基于 FastAPI 构建的 Gemini API 代理，旨在提供一个简单、安全且可配置的方式来访问 Google 的 Gemini 模型。适用于在 Hugging Face Spaces 上部署，并支持openai api格式的工具集成。
+
+## 项目采用动态更新，随时会有一些小更新同步到主仓库且会自动构建镜像，如果反馈的bug开发者说修了但是版本号没变是正常现象，~~记得勤更新镜像哦~~
 
 # 本项目基于CC BY-NC 4.0许可开源，需遵守以下规则
 - 您必须给出适当的署名，提供指向本协议的链接，并指明是否（对原作）作了修改。您可以以任何合理方式进行，但不得以任何方式暗示许可方认可您或您的使用。
@@ -16,7 +18,7 @@
 
 - [错误自查](./wiki/error.md)
 ###  使用文档
-- [huggingface 部署的使用文档（服务器出现问题，暂时不推荐）](./wiki/huggingface.md)
+- [huggingface 部署的使用文档（复活？！）（推荐，免费，手机电脑均可使用）](./wiki/huggingface.md)
 - [上面看不到图的看这里](https://blog.rzline.eu.org/2025/04/29/HuggingFace%E9%83%A8%E7%BD%B2Gemini%E8%BD%AE%E8%AF%A2%E9%A1%B9%E7%9B%AEHajimi)
 
 - [Claw Cloud部署的使用文档（推荐，免费，手机电脑均可使用）](./wiki/claw.md) 感谢[@IDeposit](https://github.com/IDeposit)编写
@@ -31,26 +33,11 @@
 - [vertex模式的使用文档](./wiki/vertex.md)
 
 ###  更新日志
-* v0.2.1beta
-    * 为vps/本地部署用户提供持久化支持（测试版），现在所有的配置选项与请求记录都可以持久化存储
-    * 为前端添加API实时调用统计图表
-    * 为前端新增添加API秘钥功能（注意，如果您没有配置持久化，在这里添加的key在项目重启后会丢失）
-    * 新增环境变量`STORAGE_DIR`，为持久化存储目录，默认为`/hajimi/settings/`
-    * 新增环境变量`ENABLE_STORAGE`，为是否启用持久化，默认为`false` 
-    * 修复若干bug，提高系统稳定性
-* v0.2.0
-    * ui全面焕新，更动态更好看，为api key显示添加分页，适配拥有大量key的用户
-    * 隔离vertex模式与ai studio模式日志，ai studio玩家再也不会看到vertex的报错了
-    * 拆分web ui密码与连接密码，现在可以安全的把反代分享给其他人了
-    * 新增环境变量`WEB_PASSWORD`，为web ui修改设置密码，默认值为环境变量`PASSWORD`的值
-    * 修复若干bug，增加系统稳定性
-* v0.1.7
-    * 添加token计数器，现在可以在前端看到每一个api使用的token数与单模型使用的token数量了
-    * 为2.5flash模型适配`thinkingBudget`参数，用户只需在附加参数中添加`- thinking_budget : 1024`即可调整
-    * 修复在报错中错误漏出key的问题
-    * 为并发缓存功能实现缓存键值计算切换，用户可选择使用最后四条消息或全部消息计算缓存
-    * 新增环境变量`PRECISE_CACHE`，为切换缓存计算方法，默认为`false`
-    * 修复若干bug
+* v0.2.4
+   * 为vertex模式适配gemini-2.5-pro-preview-05-06
+   * 修复负载均衡模式bug
+   * 优化统计相关计算，占用性能更少
+   * 修复若干bug，提高系统稳定性
 
 * 历史版本更新日志请查看[update](./update.md)
 
@@ -62,7 +49,7 @@
 
 ### 💬 聊天补全接口：
 
-*   提供 `/v1/chat/completions` 接口，支持流式和非流式响应，与 OpenAI API 格式兼容。
+*   提供 `/v1/chat/completions` 接口，支持流式和非流式响应，支持函数调用，与 OpenAI API 格式兼容。
 *   支持的输入内容: 文本、文件、图像
 *   自动将 OpenAI 格式的请求转换为 Gemini 格式。
 
@@ -115,7 +102,7 @@
     *   `MAX_CONCURRENT_REQUESTS`: 允许的最大并发请求数。默认为 `3`。
     *   `CACHE_EXPIRY_TIME`: 缓存的有效时间（秒），默认 `21600` (6小时)。
     *   `MAX_CACHE_ENTRIES`: 最多缓存多少条响应，默认 `500`。
-    *   `PRECISE_CACHE`: 是否使用用户的全部消息，而不是最后五条来计算缓存键。默认为 `false`。
+    *   `PRECISE_CACHE`: 是否使用用户的全部消息，而不是最后八条来计算缓存键。默认为 `false`。
     
     **Q: 新版本增加的并发缓存功能会增加 gemini 配额的使用量吗？**
    
